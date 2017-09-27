@@ -11755,6 +11755,60 @@ div#notebook {
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+
+<span class="n">HTML</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;&lt;script&gt;</span>
+<span class="s1">code_show=true; </span>
+<span class="s1">function code_toggle() {</span>
+<span class="s1"> if (code_show){</span>
+<span class="s1"> $(&#39;div.input&#39;).hide();</span>
+<span class="s1"> } else {</span>
+<span class="s1"> $(&#39;div.input&#39;).show();</span>
+<span class="s1"> }</span>
+<span class="s1"> code_show = !code_show</span>
+<span class="s1">} </span>
+<span class="s1">$( document ).ready(code_toggle);</span>
+<span class="s1">&lt;/script&gt;</span>
+<span class="s1">&lt;form action=&quot;javascript:code_toggle()&quot;&gt;&lt;input type=&quot;submit&quot; value=&quot;Click here to toggle on/off the raw code.&quot;&gt;&lt;/form&gt;&#39;&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[1]:</div>
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<script>
+code_show=true; 
+function code_toggle() {
+ if (code_show){
+ $('div.input').hide();
+ } else {
+ $('div.input').show();
+ }
+ code_show = !code_show
+} 
+$( document ).ready(code_toggle);
+</script>
+<form action="javascript:code_toggle()"><input type="submit" value="Click here to toggle on/off the raw code."></form>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
@@ -11776,13 +11830,20 @@ div#notebook {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><p><span style="text-decoration: underline;"><strong>Material</strong></span>:</p></p>
-<p><p><span style="color: #0000ff;">&nbsp;&nbsp;&nbsp; Map Area: <em>Colomiers, Occitanie, France. This the place where I live.</em><br /><em>&nbsp;&nbsp;&nbsp; (This map has been extracted from Metro extracts.The file size is around 58 MB.)</em></span></p></p>
-<p><p>The tools used for the analysis are:</p></p>
-<ul>
-<li>&nbsp;Python as coding language</li>
-<li>Jupyter for code editing + analysis report</li>
-<li>SQLite for Data Base</li>
-</ul>
+<p><p>&nbsp;<span style="color: #0000ff;">&nbsp;&nbsp;&nbsp; Map Area: <em>Colomiers, Occitanie, France. This the place where I live.</em><br /><em>&nbsp;&nbsp;&nbsp; (This map has been extracted from Metro extracts.The file size is around 58 MB.)</em></span></p></p>
+<p><p>&nbsp;The tools used for the analysis are:</p></p>
+<p><ul></p>
+<p><li>Python as coding language</li></p>
+<p><li>Jupyter for code editing + analysis report</li></p>
+<p><li>SQLite for Data Base</li>
+&lt;/ul&gt;</p>
+<p><p><span style="text-decoration: underline;"><strong>Method:</strong></span></p></p>
+<p><p>Ths document mixes comments and code in order to demonstrate step by step&nbsp;the methode used for data analysis.</p></p>
+<p><p>But if you prefer to have document and code split, you can toggle on/off the raw code by clicking on the button&nbsp;on top this notebook.</p></p>
+<p><p>You will find the code alone&nbsp;with following name: <em>Project+Wrangling+OpenStree+Map+project.py</em></p></p>
+<p><p>&nbsp;</p>
+&lt;/div&gt;</p>
+
 </div>
 </div>
 </div>
@@ -11808,7 +11869,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
@@ -11947,7 +12008,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">csv</span>
@@ -12146,7 +12207,7 @@ Creating ways nodes done
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">sqlite3</span>
@@ -12245,7 +12306,7 @@ Creating ways nodes done
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
@@ -12346,7 +12407,7 @@ Import done
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">display</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
@@ -12541,16 +12602,17 @@ Top 10 source:
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>In this chapter, I propose to clean the data in the csv creation step. The advantage is I have just to adapt my code. Moreover, as the OSM dataset is pretty clean I will have only a few correction to do.</p>
 <p>I create a new function named 'csv_data_cleaning' that will get a csv file produced by python code, apply some modifications and output a new csv file I will import into a new SQLite DataBase (in fact, I drop all the existing tables in the existing DB and I import again with modified csv files).</p>
-<p>a) City and street type modification</p>
+<ol style="list-style-type: lower-alpha;">
+<li><span style="text-decoration: underline;">City and street type modification</span></li>
+</ol>
 <p>On first analysis, we noticed that both city entries were different because our code was sensitive to upper/lower cases. Same for street types.</p>
 <p>I propose to use string.capitalize() function to have the first letter of city in capitize letter and the rest lowercased.</p>
-
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">name_cleaning</span><span class="p">(</span><span class="n">city_name</span><span class="p">):</span>
@@ -12609,7 +12671,7 @@ Clean data... done
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">sql_creation</span><span class="p">()</span>
@@ -12770,7 +12832,7 @@ Top 10 source:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
