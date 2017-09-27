@@ -3,26 +3,29 @@
 
 # # Project Wrangling:  Open Stree Map project
 
-# Objectives:
-# - This project plans to get a dataset from Open Street, to clean it and to import into a Data Base (SQLite for me)
-# - Then the data will be analysed and observations reported into this document
-# - Observations that could lead to dataset corrections will be reinjected into data import step
-# - A last anaylysis will be done on the cleaned data
+# <p><span style="text-decoration: underline;"><strong>Objectives:</strong></span></p>
+# <ul>
+# <li>This project plans to get a dataset from Open Street, to clean it and to import into a Data Base (SQLite for me)</li>
+# <li>Then the data will be analysed and observations reported into this document</li>
+# <li>Observations that could lead to dataset corrections will be reinjected into data import step</li>
+# <li>A last anaylysis will be done on the cleaned data</li>
+# </ul>
 
-# Material:
-# 
-#     Map Area: Colomiers, Occitanie, France. This the place where I live.
-#     (This map has been extracted from Metro extracts.The file size is around 58 MB.)
-# 
-# The tools used for the analysis are:
-# - Python as coding language
-# - Jupyter for code editing + analysis report
-# - SQLite for Data Base
+# <p><span style="text-decoration: underline;"><strong>Material</strong></span>:</p>
+# <p><span style="color: #0000ff;">&nbsp;&nbsp;&nbsp; Map Area: <em>Colomiers, Occitanie, France. This the place where I live.</em><br /><em>&nbsp;&nbsp;&nbsp; (This map has been extracted from Metro extracts.The file size is around 58 MB.)</em></span></p>
+# <p>The tools used for the analysis are:</p>
+# <ul>
+# <li>&nbsp;Python as coding language</li>
+# <li>Jupyter for code editing + analysis report</li>
+# <li>SQLite for Data Base</li>
+# </ul>
 # 
 
 # ## 1) First observations on data set
 
-# In a first step, I'm checking structure of the dataset with a sample function (given in Udacity instructions)
+# In a first step, I'm checking structure of the dataset with a sample function (given in Udacity instructions).
+# 
+# The output is an XML file that I'm checking with a simple tool like Notepad++.
 
 # In[1]:
 
@@ -34,7 +37,7 @@ import xml.etree.ElementTree as ET  # Use cElementTree or lxml if too slow
 OSM_FILE = "Colomiers.osm"  # Replace this with your osm file
 SAMPLE_FILE = "sample.osm"
 
-k = 5 # Parameter: take every k-th top level element
+k = 2 # Parameter: take every k-th top level element
 
 def get_element(osm_file, tags=( 'node','way', 'relation')):
     """Yield element if it is the right type of tag
@@ -62,13 +65,51 @@ with open(SAMPLE_FILE, 'wb') as output:
     output.write('</osm>')
 
 
+# <p><span style="text-decoration: underline;"><strong>Example of Node:</strong></span>:</p>
+# <p>&nbsp;&lt;node changeset="30514765" id="339791273" lat="43.6149147" lon="1.3294562" timestamp="2015-04-26T21:04:24Z" uid="1626" user="FredB" version="6"&gt;<br />&nbsp;&nbsp;&lt;tag k="name" v="Pharmacie du Prat" /&gt;<br />&nbsp;&nbsp;&lt;tag k="source" v="Celtipharm - 10/2014" /&gt;<br />&nbsp;&nbsp;&lt;tag k="amenity" v="pharmacy" /&gt;<br />&nbsp;&nbsp;&lt;tag k="dispensing" v="yes" /&gt;<br />&nbsp;&nbsp;&lt;tag k="wheelchair" v="yes" /&gt;<br />&nbsp;&nbsp;&lt;tag k="ref:FR:FINESS" v="310008230" /&gt;</p>
+
+# <p><span style="text-decoration: underline;"><strong>Example of Way point:</strong></span>:</p>
+# 
+# <p>&nbsp;&lt;way changeset="20389389" id="35773868" timestamp="2014-02-05T11:41:35Z" uid="149399" user="awikatchikaen" version="5"&gt;<br />&nbsp;&nbsp;&lt;nd ref="418245304" /&gt;<br />&nbsp;&nbsp;&lt;nd ref="418245306" /&gt;<br />&nbsp;&nbsp;&lt;nd ref="418245307" /&gt;<br />&nbsp;&nbsp;&lt;nd ref="418245309" /&gt;<br />&nbsp;&nbsp;&lt;nd ref="418245311" /&gt;<br />&nbsp;&nbsp;&lt;nd ref="2280539648" /&gt;<br />&nbsp;&nbsp;&lt;nd ref="2655807950" /&gt;<br />&nbsp;&nbsp;&lt;tag k="highway" v="path" /&gt;<br />&nbsp;&lt;/way&gt;</p>
+
 # The first observations enabled me to understand structure of XML file and to get a smaller extract of OSM data than original dataset.
 # 
 # I tested all my code against this sample data each time I could to minimize computing time.
 
-# ## 2) Creation of CSV files
+# # 2 ) Problems observed in the sample
 
-# Before cleaning the data. I decided to create csv file related to Data schema (provided into project instructions).
+# <p>Thanks to the sample, the following issues could be quickly raised:</p>
+# <ul>
+# <li>tag properties are <strong><span style="color: #0000ff;">k</span></strong> and <strong><span style="color: #0000ff;">v</span></strong> whereas <strong><span style="color: #0000ff;">key</span> </strong>and <strong><span style="color: #0000ff;">value</span> </strong>are requested in SQL schema</li>
+# <li>Type of tags are under the format:
+# <ul>
+# <li>&lt;tag k="<strong><span style="color: #0000ff;">addr</span></strong>:city" v="Tournefeuille" /&gt;</li>
+# <li>The type is <span style="color: #0000ff;"><strong>addr</strong> </span>(ie. address)</li>
+# <li>That means processing is required to extract the from tag key</li>
+# </ul>
+# </li>
+# <li>Problem of case sensitiveness for City: <span style="color: #0000ff;">'<strong>COLOMIERS</strong>'</span> and <span style="color: #0000ff;">'<strong>Colomiers</strong>'</span></li>
+# <li>Same for street types: <span style="color: #0000ff;">'<strong>PLACE</strong>'</span> and <span style="color: #0000ff;">'<strong>Place</strong>'</span></li>
+# <li>Date of source data are present in two fields:
+# <ul>
+# <li>&lt;tag k="source_date" v="<span style="color: #0000ff;"><strong>04/04/2012</strong></span>" /&gt;</li>
+# <li>&lt;tag k="source" v="cadastre-dgi-fr source : Direction G&eacute;n&eacute;rale des Imp&ocirc;ts - Cadastre. Mise &agrave; jour : <span style="color: #0000ff;"><strong>2009</strong></span>" /&gt;</li>
+# </ul>
+# </li>
+# </ul>
+
+# ## 3) Creation of CSV files
+
+# <p>Before cleaning the data. I decided to create csv file related to Data schema (provided into project instructions).</p>
+# <p>The only modifcation linked to issues observed in the sample are:</p>
+# <ul>
+# <li>the type of tag with <strong><span style="color: #0000ff;"><em>addr</em> </span></strong>substring
+# <ul>
+# <li><em><strong><span style="color: #0000ff;">addr</span></strong></em>:city will be split into 2 substrings with the first one as tag <strong><span style="color: #0000ff;"><em>type</em> </span></strong>and the second as <strong><span style="color: #0000ff;"><em>key </em></span></strong><span style="color: #0000ff;"><em><span style="color: #000000;">(even if a : is present into the second sub string)</span></em></span></li>
+# </ul>
+# </li>
+# <li>tag properties <strong><span style="color: #0000ff;">k</span></strong> and <strong><span style="color: #0000ff;">v</span></strong> will be mapped with <strong><span style="color: #0000ff;">key</span> </strong>and <strong><span style="color: #0000ff;">value</span> </strong>as requested in SQL schema</li>
+# </ul> 
 
 # In[2]:
 
@@ -121,7 +162,7 @@ def create_table_tags(osm_file,csv_file,fieldnames,tag,k):
                             o=key
                         entry[o]=elem.attrib[key].encode('utf-8')
                         if key=="k" :
-                            if ":" in elem.attrib[key]:
+                            if ":" in elem.attrib[key]: #extract of tag type from k field
                                 entry['type']=elem.attrib[key].split(":")[0].encode('utf-8')    
                                 entry[o]=elem.attrib[key].split(":")[1].encode('utf-8')   
                     entry['id']=element.attrib['id'].encode('utf-8')                  
@@ -199,9 +240,23 @@ def tables_creation(k=1,osm_file='Colomiers.osm',csv_file_nodes='nodes.csv',csv_
 tables_creation()
 
 
-# ## 3)  Import into Database
+# <p>As an output, we have several csv files corresponding to SQL schema provided in project instructions:&nbsp;</p>
+# <ul>
+# <li><em>nodes.csv</em></li>
+# <li><em>nodes_tags.csv</em></li>
+# <li><em>ways.csv</em></li>
+# <li><em>ways_tags.csv</em></li>
+# <li><em>ways_nodes.csv</em></li>
+# </ul>
 
-# After creating csv files, I import them into SQLlite Data Base thanks to pandas python library.
+# ## 4)  Import into Database
+
+# <p>After creating csv files, I import them into SQLlite Data Base thanks to pandas python library.</p>
+# <p>I do in two steps:</p>
+# <ol>
+# <li>creation of&nbsp;SQL schemas</li>
+# <li>Import of csv files into DB thanks to pandas dataframe</li>
+# </ol>
 
 # In[3]:
 
@@ -337,12 +392,13 @@ def import_sql(csv_file_nodes='nodes.csv',csv_file_nodes_tags='nodes_tags.csv',c
 import_sql()
 
 
+# # 5)  First analysis from Database
+
+# Once data imported into SQL database, we can analyse the data.
+# 
+# For that, I develop a Python function that will display Top 10 for users, city, postcode and street types. That will enable me to see if there is some obvious issues with data.
+
 # In[5]:
-
-## 4)  First analysis from Database
-
-
-# In[6]:
 
 def display(result):
     j=1
@@ -420,15 +476,18 @@ def top_sql():
 top_sql()
 
 
-# Analysis:
-# - On top users, except 'Chouloute' extra number of inputs, nothing to report
-# - On top postcodes, it is interesting to observe that not only Colomiers postal code is represented (31770), Tournefeuille (31170) and Toulouse (31300&31000) are numberous as well. That could be explained by the fact Tournefeuille and Colomiers are neighbours of Colomiers. Same for Pibrac (31820) but with less quantity. 31776 corresponds to Colomiers with a different format. I will analyse afterwards.
-# - On top city, same observation as for postal code, Colomiers represents half of references. On interesting thinh is Colomiers with Upper and Lower cases that make two entries into Data Base. I propose to clean it afterwards.
-# - On top street types, we can see there are only 6 entries. There is one issue related to sensitive case (Place and place). I will fix it in next section
-# - On top sources, Cadastre (ie. the register of the real estate or real property's metes-and-bounds of France) is the top listed that is normal because it is its primary function. Nothing else interesting to notice.
-# 
-# Synthesis:
-# - No big issues on top parameters analysis, the dataset seems to be well built
+# <p><span style="text-decoration: underline;"><strong>Analysis:</strong></span></p>
+# <ul>
+# <li style="padding-left: 30px;">On top users, except 'Chouloute' extra number of inputs, nothing to report</li>
+# <li style="padding-left: 30px;">On top postcodes, it is interesting to observe that not only Colomiers postal code is represented (31770), Tournefeuille (31170) and Toulouse (31300&amp;31000) are numberous as well. That could be explained by the fact Tournefeuille and Colomiers are neighbours of Colomiers. Same for Pibrac (31820) but with less quantity. 31776 corresponds to Colomiers with a different format. I will analyse afterwards.</li>
+# <li style="padding-left: 30px;">On top city, same observation as for postal code, Colomiers represents half of references. As I noticed in the first analysis from the sample, Colomiers with Upper and Lower cases that make two entries into Data Base. I propose to clean it afterwards.</li>
+# <li style="padding-left: 30px;">On top street types, we can see there are only 6 entries. There is one issue related to sensitive case (Place and place). I will fix it in next section</li>
+# <li style="padding-left: 30px;">On top sources, Cadastre (ie. the register of the real estate or real property's metes-and-bounds of France) is the top listed that is normal because it is its primary function. Nothing else interesting to notice</li>
+# </ul>
+# <p><span style="text-decoration: underline;"><strong>Synthesis:</strong></span></p>
+# <ul>
+# <li>No big issues on top parameters analysis, the dataset seems to be well built</li>
+# </ul>
 
 # ## 4)  Cleaning of Dataset
 
@@ -442,7 +501,7 @@ top_sql()
 # 
 # I propose to use string.capitalize() function to have the first letter of city in capitize letter and the rest lowercased.
 
-# In[7]:
+# In[6]:
 
 def name_cleaning(city_name):
     return city_name.capitalize() 
@@ -476,32 +535,56 @@ csv_data_cleaning('nodes_tags.csv','nodes_tags_cleaned.csv')
 csv_data_cleaning('ways_tags.csv','ways_tags_cleaned.csv')
 
 
-# In[8]:
+# In[7]:
 
 sql_creation()
 import_sql(csv_file_nodes='nodes.csv',csv_file_nodes_tags='nodes_tags_cleaned.csv',csv_file_ways='ways.csv',csv_file_ways_tags='ways_tags_cleaned.csv',csv_file_ways_nodes='ways_nodes.csv')
 top_sql()
 
 
-# Analysis:
-# - The few corrections have been done and give the goog results
-# - Nothing more to report on users, postcode and city
-# - On street types, it is interresting that the majority of street type are "Allée" (ie. Alley) whereas it should be "Rue" (ie. Street) as most of street are "Rue". That could be explained by the fact that users focus on main street and not on small street ("Rue")
-# - On top source, we can see we have update date in most of cases, I propose to make a last study on this item in order to check if this dataset is uptodate
-# 
-# 
-# Synthesis:
-# - This OSM dataset seems far more clean as examples during udacity course
-# 
+# <p><span style="text-decoration: underline;"><strong>Analysis:</strong></span></p>
+# <ul>
+# <li>The few corrections have been done and give the good results</li>
+# <li>Nothing more to report on users, postcode and city</li>
+# <li>On street types, it is interresting that the majority of street type are "All&eacute;e" (ie. Alley) whereas it should be "Rue" (ie. Street) as most of street are "Rue". That could be explained by the fact that users focus on main street and not on small street ("Rue")</li>
+# <li>On top source, we can see we have update date in most of cases, I propose to make a last study on this item in order to check if this dataset is uptodate</li>
+# </ul>
+# <p><br /><span style="text-decoration: underline;"><strong>Synthesis:</strong></span></p>
+# <ul>
+# <li>This OSM dataset seems far cleaner as examples during udacity course</li>
+# </ul>
 
 # ## 5)  Last analysis
 
-# On this last chapter, I propose to check date related to source tag in the dataset. It will enable to give a status about how uptodate the dataset is.
-# For this, I propose to extract the date from the value of 'source' tag in nodes_tags and ways_tags tables.
-# 
-# I will use the following regular expression to match the year: "^(19|20)\d{2}$" may be additional filter will be needed.
+# <p>On this last chapter, I propose to check <strong>date </strong>related to <strong>source </strong>tag in the dataset. It will enable to give a status about how uptodate the dataset is.</p>
+# <p>For this, I propose to extract the date from:</p>
+# <ul>
+# <li>the value of '<strong>source_date'</strong> tag in nodes_tags and ways_tags tables.
+# <ul>
+# <li>&lt;tag k="<strong>source_date"</strong> v="<strong>04/04/2012</strong>" /&gt;</li>
+# <li>To notice that date could be under different formats:
+# <ul>
+# <li>18/03/2013</li>
+# <li>2017-09-04</li>
+# <li>10/2016</li>
+# <li>But as the year is only interesting for my topic, I choose to use a regular expression to match the year: <em>"^(19|20)\d{2}\$</em>"&nbsp;</li>
+# </ul>
+# </li>
+# </ul>
+# </li>
+# </ul>
+# <ul>
+# <li>the string of '<strong>source</strong>' tag in nodes_tags and ways_tags tables.
+# <ul>
+# <li>&lt;tag k="<strong>source"</strong> v="cadastre-dgi-fr source : Direction G&eacute;n&eacute;rale des Imp&ocirc;ts - Cadastre. Mise &agrave; jour : <strong>2009</strong>" /&gt;</li>
+# <li>I use the&nbsp;same&nbsp;regular expression to match the year: <em>"^(19|20)\d{2}$"</em></li>
+# </ul>
+# </li>
+# </ul>
+# <ul>
+# </ul>
 
-# In[9]:
+# In[8]:
 
 import re
 from collections import Counter
@@ -525,18 +608,26 @@ j=0
 for i in result:  
     m = re.search('(19|20)\d{2}$',i[0])
     if m:
-        #print m.group(0)
         x.append(m.group(0))
 
-#print 'Update year:{}'.format(dict(Counter(x)))
-#print 'Total source tag with year:{}'.format(len(x))
+## Extract year from source_date tag value ###
+result=c.execute('''SELECT value from (select * from nodes_tags UNION ALL select * from ways_tags) where key='source_date';''')
+j=0
+for i in result:  
+    m = re.search('(19|20)\d{2}$',i[0])
+    if m:
+        x.append(m.group(0))
+
+#Display of the year
 display_year(dict(Counter(x)))
 print '\nTotal source tag with year:{}'.format(len(x))
 conn.close()
 
 
-# Analysis:
-# - It appears that data are quite old since the main part of data are from 2010 (ie. 7 years old)
+# <p><span style="text-decoration: underline;"><strong>Analysis:</strong></span></p>
+# <ul>
+# <li>It appears that data are quite old since the main part of data are from 2010 (ie. 7 years old)</li>
+# </ul>
 
 # ## 6)  Conclusions
 
@@ -547,8 +638,3 @@ conn.close()
 # - The common mistake of case sencitiveness could be preventer by a systematic cleaning routine that could enforce rules for every entries
 # - The data is quite old since most of information are 7 years old
 # 
-
-# In[ ]:
-
-
-

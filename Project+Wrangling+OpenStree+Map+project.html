@@ -11760,14 +11760,13 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Objectives:</p>
+<p><p><span style="text-decoration: underline;"><strong>Objectives:</strong></span></p></p>
 <ul>
 <li>This project plans to get a dataset from Open Street, to clean it and to import into a Data Base (SQLite for me)</li>
 <li>Then the data will be analysed and observations reported into this document</li>
 <li>Observations that could lead to dataset corrections will be reinjected into data import step</li>
 <li>A last anaylysis will be done on the cleaned data</li>
 </ul>
-
 </div>
 </div>
 </div>
@@ -11776,19 +11775,14 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Material:</p>
-
-<pre><code>Map Area: Colomiers, Occitanie, France. This the place where I live.
-(This map has been extracted from Metro extracts.The file size is around 58 MB.)
-
-</code></pre>
-<p>The tools used for the analysis are:</p>
+<p><p><span style="text-decoration: underline;"><strong>Material</strong></span>:</p></p>
+<p><p><span style="color: #0000ff;">&nbsp;&nbsp;&nbsp; Map Area: <em>Colomiers, Occitanie, France. This the place where I live.</em><br /><em>&nbsp;&nbsp;&nbsp; (This map has been extracted from Metro extracts.The file size is around 58 MB.)</em></span></p></p>
+<p><p>The tools used for the analysis are:</p></p>
 <ul>
-<li>Python as coding language</li>
+<li>&nbsp;Python as coding language</li>
 <li>Jupyter for code editing + analysis report</li>
 <li>SQLite for Data Base</li>
 </ul>
-
 </div>
 </div>
 </div>
@@ -11806,7 +11800,8 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>In a first step, I'm checking structure of the dataset with a sample function (given in Udacity instructions)</p>
+<p>In a first step, I'm checking structure of the dataset with a sample function (given in Udacity instructions).</p>
+<p>The output is an XML file that I'm checking with a simple tool like Notepad++.</p>
 
 </div>
 </div>
@@ -11824,7 +11819,7 @@ div#notebook {
 <span class="n">OSM_FILE</span> <span class="o">=</span> <span class="s2">&quot;Colomiers.osm&quot;</span>  <span class="c1"># Replace this with your osm file</span>
 <span class="n">SAMPLE_FILE</span> <span class="o">=</span> <span class="s2">&quot;sample.osm&quot;</span>
 
-<span class="n">k</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1"># Parameter: take every k-th top level element</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># Parameter: take every k-th top level element</span>
 
 <span class="k">def</span> <span class="nf">get_element</span><span class="p">(</span><span class="n">osm_file</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">(</span> <span class="s1">&#39;node&#39;</span><span class="p">,</span><span class="s1">&#39;way&#39;</span><span class="p">,</span> <span class="s1">&#39;relation&#39;</span><span class="p">)):</span>
     <span class="sd">&quot;&quot;&quot;Yield element if it is the right type of tag</span>
@@ -11862,6 +11857,25 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p><span style="text-decoration: underline;"><strong>Example of Node:</strong></span>:</p>
+<p>&nbsp;&lt;node changeset="30514765" id="339791273" lat="43.6149147" lon="1.3294562" timestamp="2015-04-26T21:04:24Z" uid="1626" user="FredB" version="6"&gt;<br />&nbsp;&nbsp;&lt;tag k="name" v="Pharmacie du Prat" /&gt;<br />&nbsp;&nbsp;&lt;tag k="source" v="Celtipharm - 10/2014" /&gt;<br />&nbsp;&nbsp;&lt;tag k="amenity" v="pharmacy" /&gt;<br />&nbsp;&nbsp;&lt;tag k="dispensing" v="yes" /&gt;<br />&nbsp;&nbsp;&lt;tag k="wheelchair" v="yes" /&gt;<br />&nbsp;&nbsp;&lt;tag k="ref:FR:FINESS" v="310008230" /&gt;</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><span style="text-decoration: underline;"><strong>Example of Way point:</strong></span>:</p><p>&nbsp;&lt;way changeset="20389389" id="35773868" timestamp="2014-02-05T11:41:35Z" uid="149399" user="awikatchikaen" version="5"&gt;<br />&nbsp;&nbsp;&lt;nd ref="418245304" /&gt;<br />&nbsp;&nbsp;&lt;nd ref="418245306" /&gt;<br />&nbsp;&nbsp;&lt;nd ref="418245307" /&gt;<br />&nbsp;&nbsp;&lt;nd ref="418245309" /&gt;<br />&nbsp;&nbsp;&lt;nd ref="418245311" /&gt;<br />&nbsp;&nbsp;&lt;nd ref="2280539648" /&gt;<br />&nbsp;&nbsp;&lt;nd ref="2655807950" /&gt;<br />&nbsp;&nbsp;&lt;tag k="highway" v="path" /&gt;<br />&nbsp;&lt;/way&gt;</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <p>The first observations enabled me to understand structure of XML file and to get a smaller extract of OSM data than original dataset.</p>
 <p>I tested all my code against this sample data each time I could to minimize computing time.</p>
 
@@ -11873,7 +11887,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="2)-Creation-of-CSV-files">2) Creation of CSV files<a class="anchor-link" href="#2)-Creation-of-CSV-files">&#182;</a></h2>
+<h1 id="2-)-Problems-observed-in-the-sample">2 ) Problems observed in the sample<a class="anchor-link" href="#2-)-Problems-observed-in-the-sample">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -11882,8 +11896,52 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Before cleaning the data. I decided to create csv file related to Data schema (provided into project instructions).</p>
-
+<p><p>Thanks to the sample, the following issues could be quickly raised:</p></p>
+<ul>
+<li>tag properties are <strong><span style="color: #0000ff;">k</span></strong> and <strong><span style="color: #0000ff;">v</span></strong> whereas <strong><span style="color: #0000ff;">key</span> </strong>and <strong><span style="color: #0000ff;">value</span> </strong>are requested in SQL schema</li>
+<li>Type of tags are under the format:
+<ul>
+<li>&lt;tag k="<strong><span style="color: #0000ff;">addr</span></strong>:city" v="Tournefeuille" /&gt;</li>
+<li>The type is <span style="color: #0000ff;"><strong>addr</strong> </span>(ie. address)</li>
+<li>That means processing is required to extract the from tag key</li>
+</ul>
+</li>
+<li>Problem of case sensitiveness for City: <span style="color: #0000ff;">'<strong>COLOMIERS</strong>'</span> and <span style="color: #0000ff;">'<strong>Colomiers</strong>'</span></li>
+<li>Same for street types: <span style="color: #0000ff;">'<strong>PLACE</strong>'</span> and <span style="color: #0000ff;">'<strong>Place</strong>'</span></li>
+<li>Date of source data are present in two fields:
+<ul>
+<li>&lt;tag k="source_date" v="<span style="color: #0000ff;"><strong>04/04/2012</strong></span>" /&gt;</li>
+<li>&lt;tag k="source" v="cadastre-dgi-fr source : Direction G&eacute;n&eacute;rale des Imp&ocirc;ts - Cadastre. Mise &agrave; jour : <span style="color: #0000ff;"><strong>2009</strong></span>" /&gt;</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="3)-Creation-of-CSV-files">3) Creation of CSV files<a class="anchor-link" href="#3)-Creation-of-CSV-files">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><p>Before cleaning the data. I decided to create csv file related to Data schema (provided into project instructions).</p></p>
+<p><p>The only modifcation linked to issues observed in the sample are:</p></p>
+<ul>
+<li>the type of tag with <strong><span style="color: #0000ff;"><em>addr</em> </span></strong>substring
+<ul>
+<li><em><strong><span style="color: #0000ff;">addr</span></strong></em>:city will be split into 2 substrings with the first one as tag <strong><span style="color: #0000ff;"><em>type</em> </span></strong>and the second as <strong><span style="color: #0000ff;"><em>key </em></span></strong><span style="color: #0000ff;"><em><span style="color: #000000;">(even if a : is present into the second sub string)</span></em></span></li>
+</ul>
+</li>
+<li>tag properties <strong><span style="color: #0000ff;">k</span></strong> and <strong><span style="color: #0000ff;">v</span></strong> will be mapped with <strong><span style="color: #0000ff;">key</span> </strong>and <strong><span style="color: #0000ff;">value</span> </strong>as requested in SQL schema</li>
+</ul>
 </div>
 </div>
 </div>
@@ -11941,7 +11999,7 @@ div#notebook {
                             <span class="n">o</span><span class="o">=</span><span class="n">key</span>
                         <span class="n">entry</span><span class="p">[</span><span class="n">o</span><span class="p">]</span><span class="o">=</span><span class="n">elem</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">key</span><span class="o">==</span><span class="s2">&quot;k&quot;</span> <span class="p">:</span>
-                            <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">elem</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                            <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">elem</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span> <span class="c1">#extract of tag type from k field</span>
                                 <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">elem</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>    
                                 <span class="n">entry</span><span class="p">[</span><span class="n">o</span><span class="p">]</span><span class="o">=</span><span class="n">elem</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>   
                     <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>                  
@@ -12052,7 +12110,14 @@ Creating ways nodes done
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="3)--Import-into-Database">3)  Import into Database<a class="anchor-link" href="#3)--Import-into-Database">&#182;</a></h2>
+<p><p>As an output, we have several csv files corresponding to SQL schema provided in project instructions:&nbsp;</p></p>
+<ul>
+<li><em>nodes.csv</em></li>
+<li><em>nodes_tags.csv</em></li>
+<li><em>ways.csv</em></li>
+<li><em>ways_tags.csv</em></li>
+<li><em>ways_nodes.csv</em></li>
+</ul>
 </div>
 </div>
 </div>
@@ -12061,8 +12126,21 @@ Creating ways nodes done
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>After creating csv files, I import them into SQLlite Data Base thanks to pandas python library.</p>
-
+<h2 id="4)--Import-into-Database">4)  Import into Database<a class="anchor-link" href="#4)--Import-into-Database">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><p>After creating csv files, I import them into SQLlite Data Base thanks to pandas python library.</p></p>
+<p><p>I do in two steps:</p></p>
+<ol>
+<li>creation of&nbsp;SQL schemas</li>
+<li>Import of csv files into DB thanks to pandas dataframe</li>
+</ol>
 </div>
 </div>
 </div>
@@ -12246,22 +12324,29 @@ Import done
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="5)--First-analysis-from-Database">5)  First analysis from Database<a class="anchor-link" href="#5)--First-analysis-from-Database">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Once data imported into SQL database, we can analyse the data.</p>
+<p>For that, I develop a Python function that will display Top 10 for users, city, postcode and street types. That will enable me to see if there is some obvious issues with data.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1">## 4)  First analysis from Database</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">display</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
@@ -12425,19 +12510,18 @@ Top 10 source:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Analysis:</p>
+<p><p><span style="text-decoration: underline;"><strong>Analysis:</strong></span></p></p>
 <ul>
-<li>On top users, except 'Chouloute' extra number of inputs, nothing to report</li>
-<li>On top postcodes, it is interesting to observe that not only Colomiers postal code is represented (31770), Tournefeuille (31170) and Toulouse (31300&amp;31000) are numberous as well. That could be explained by the fact Tournefeuille and Colomiers are neighbours of Colomiers. Same for Pibrac (31820) but with less quantity. 31776 corresponds to Colomiers with a different format. I will analyse afterwards.</li>
-<li>On top city, same observation as for postal code, Colomiers represents half of references. On interesting thinh is Colomiers with Upper and Lower cases that make two entries into Data Base. I propose to clean it afterwards.</li>
-<li>On top street types, we can see there are only 6 entries. There is one issue related to sensitive case (Place and place). I will fix it in next section</li>
-<li>On top sources, Cadastre (ie. the register of the real estate or real property's metes-and-bounds of France) is the top listed that is normal because it is its primary function. Nothing else interesting to notice.</li>
+<li style="padding-left: 30px;">On top users, except 'Chouloute' extra number of inputs, nothing to report</li>
+<li style="padding-left: 30px;">On top postcodes, it is interesting to observe that not only Colomiers postal code is represented (31770), Tournefeuille (31170) and Toulouse (31300&amp;31000) are numberous as well. That could be explained by the fact Tournefeuille and Colomiers are neighbours of Colomiers. Same for Pibrac (31820) but with less quantity. 31776 corresponds to Colomiers with a different format. I will analyse afterwards.</li>
+<li style="padding-left: 30px;">On top city, same observation as for postal code, Colomiers represents half of references. As I noticed in the first analysis from the sample, Colomiers with Upper and Lower cases that make two entries into Data Base. I propose to clean it afterwards.</li>
+<li style="padding-left: 30px;">On top street types, we can see there are only 6 entries. There is one issue related to sensitive case (Place and place). I will fix it in next section</li>
+<li style="padding-left: 30px;">On top sources, Cadastre (ie. the register of the real estate or real property's metes-and-bounds of France) is the top listed that is normal because it is its primary function. Nothing else interesting to notice</li>
 </ul>
-<p>Synthesis:</p>
+<p><span style="text-decoration: underline;"><strong>Synthesis:</strong></span></p>
 <ul>
 <li>No big issues on top parameters analysis, the dataset seems to be well built</li>
 </ul>
-
 </div>
 </div>
 </div>
@@ -12466,7 +12550,7 @@ Top 10 source:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">name_cleaning</span><span class="p">(</span><span class="n">city_name</span><span class="p">):</span>
@@ -12525,7 +12609,7 @@ Clean data... done
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">sql_creation</span><span class="p">()</span>
@@ -12626,18 +12710,17 @@ Top 10 source:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Analysis:</p>
+<p><p><span style="text-decoration: underline;"><strong>Analysis:</strong></span></p></p>
 <ul>
-<li>The few corrections have been done and give the goog results</li>
+<li>The few corrections have been done and give the good results</li>
 <li>Nothing more to report on users, postcode and city</li>
-<li>On street types, it is interresting that the majority of street type are "Allée" (ie. Alley) whereas it should be "Rue" (ie. Street) as most of street are "Rue". That could be explained by the fact that users focus on main street and not on small street ("Rue")</li>
+<li>On street types, it is interresting that the majority of street type are "All&eacute;e" (ie. Alley) whereas it should be "Rue" (ie. Street) as most of street are "Rue". That could be explained by the fact that users focus on main street and not on small street ("Rue")</li>
 <li>On top source, we can see we have update date in most of cases, I propose to make a last study on this item in order to check if this dataset is uptodate</li>
 </ul>
-<p>Synthesis:</p>
+<p><br /><span style="text-decoration: underline;"><strong>Synthesis:</strong></span></p>
 <ul>
-<li>This OSM dataset seems far more clean as examples during udacity course</li>
+<li>This OSM dataset seems far cleaner as examples during udacity course</li>
 </ul>
-
 </div>
 </div>
 </div>
@@ -12655,16 +12738,39 @@ Top 10 source:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>On this last chapter, I propose to check date related to source tag in the dataset. It will enable to give a status about how uptodate the dataset is.
-For this, I propose to extract the date from the value of 'source' tag in nodes_tags and ways_tags tables.</p>
-<p>I will use the following regular expression to match the year: "^(19|20)\d{2}$" may be additional filter will be needed.</p>
-
+<p><p>On this last chapter, I propose to check <strong>date </strong>related to <strong>source </strong>tag in the dataset. It will enable to give a status about how uptodate the dataset is.</p></p>
+<p><p>For this, I propose to extract the date from:</p></p>
+<ul>
+<li>the value of '<strong>source_date'</strong> tag in nodes_tags and ways_tags tables.
+<ul>
+<li>&lt;tag k="<strong>source_date"</strong> v="<strong>04/04/2012</strong>" /&gt;</li>
+<li>To notice that date could be under different formats:
+<ul>
+<li>18/03/2013</li>
+<li>2017-09-04</li>
+<li>10/2016</li>
+<li>But as the year is only interesting for my topic, I choose to use a regular expression to match the year: <em>"^(19|20)\d{2}\$</em>"&nbsp;</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>the string of '<strong>source</strong>' tag in nodes_tags and ways_tags tables.
+<ul>
+<li>&lt;tag k="<strong>source"</strong> v="cadastre-dgi-fr source : Direction G&eacute;n&eacute;rale des Imp&ocirc;ts - Cadastre. Mise &agrave; jour : <strong>2009</strong>" /&gt;</li>
+<li>I use the&nbsp;same&nbsp;regular expression to match the year: <em>"^(19|20)\d{2}$"</em></li>
+</ul>
+</li>
+</ul>
+<ul>
+</ul>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
@@ -12689,11 +12795,17 @@ For this, I propose to extract the date from the value of 'source' tag in nodes_
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>  
     <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;(19|20)\d{2}$&#39;</span><span class="p">,</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
-        <span class="c1">#print m.group(0)</span>
         <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
 
-<span class="c1">#print &#39;Update year:{}&#39;.format(dict(Counter(x)))</span>
-<span class="c1">#print &#39;Total source tag with year:{}&#39;.format(len(x))</span>
+<span class="c1">## Extract year from source_date tag value ###</span>
+<span class="n">result</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;SELECT value from (select * from nodes_tags UNION ALL select * from ways_tags) where key=&#39;source_date&#39;;&#39;&#39;&#39;</span><span class="p">)</span>
+<span class="n">j</span><span class="o">=</span><span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>  
+    <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;(19|20)\d{2}$&#39;</span><span class="p">,</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+<span class="c1">#Display of the year</span>
 <span class="n">display_year</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">Counter</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
 <span class="k">print</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Total source tag with year:{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -12709,17 +12821,17 @@ For this, I propose to extract the date from the value of 'source' tag in nodes_
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>2016 210
-2015 1627
-2014 1301
-2013 716
-2012 251
+<pre>2016 212
+2015 1633
+2014 1303
+2013 726
+2012 378
 2011 871
 2010 31692
 2009 2235
 2008 24
 
-Total source tag with year:38927
+Total source tag with year:39074
 </pre>
 </div>
 </div>
@@ -12733,11 +12845,10 @@ Total source tag with year:38927
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Analysis:</p>
+<p><p><span style="text-decoration: underline;"><strong>Analysis:</strong></span></p></p>
 <ul>
 <li>It appears that data are quite old since the main part of data are from 2010 (ie. 7 years old)</li>
 </ul>
-
 </div>
 </div>
 </div>
@@ -12765,19 +12876,6 @@ Total source tag with year:38927
 
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span> 
-</pre></div>
-
-</div>
-</div>
-</div>
-
 </div>
     </div>
   </div>
