@@ -11751,7 +11751,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Project-Wrangling:--Open-Stree-Map-project">Project Wrangling:  Open Stree Map project<a class="anchor-link" href="#Project-Wrangling:--Open-Stree-Map-project">&#182;</a></h1>
+<h1 id="Project-Wrangling:--Open-Street-Map-project">Project Wrangling:  Open Street Map project<a class="anchor-link" href="#Project-Wrangling:--Open-Street-Map-project">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -11948,7 +11948,7 @@ $( document ).ready(code_toggle);
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="2-)-Problems-observed-in-the-sample">2 ) Problems observed in the sample<a class="anchor-link" href="#2-)-Problems-observed-in-the-sample">&#182;</a></h1>
+<h2 id="2-)-Problems-observed-in-the-sample">2 ) Problems observed in the sample<a class="anchor-link" href="#2-)-Problems-observed-in-the-sample">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -12390,7 +12390,7 @@ Import done
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="5)--First-analysis-from-Database">5)  First analysis from Database<a class="anchor-link" href="#5)--First-analysis-from-Database">&#182;</a></h1>
+<h2 id="5)--First-analysis-from-Database">5)  First analysis from Database<a class="anchor-link" href="#5)--First-analysis-from-Database">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -12477,7 +12477,15 @@ Import done
 <span class="s1">    ;&#39;&#39;&#39;</span><span class="p">)</span>
     <span class="n">display_total</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
+    <span class="c1">### Show top 10 source ###</span>
+    <span class="n">result</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;SELECT value,count(value) from (select * from nodes_tags UNION ALL select * from ways_tags) where key=&#39;amenity&#39; group by value order by count(value) desc limit 10</span>
+<span class="s1">    ;&#39;&#39;&#39;</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Top 10 amenity:&quot;</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
+    <span class="n">result</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;SELECT count(value) from (select * from nodes_tags UNION ALL select * from ways_tags) where key=&#39;amenity&#39;</span>
+<span class="s1">    ;&#39;&#39;&#39;</span><span class="p">)</span>
+    <span class="n">display_total</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
     <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
@@ -12558,6 +12566,20 @@ Top 10 source:
 (10)cadastre-dgi-fr source : Direction Générale des Impôts - Cadastre. Mise à jour : 2012:	212
 
 	Total:	40409
+
+Top 10 amenity:
+(1)parking:	305
+(2)bench:	58
+(3)bicycle_parking:	55
+(4)recycling:	48
+(5)restaurant:	43
+(6)post_box:	29
+(7)school:	27
+(8)bank:	24
+(9)fast_food:	22
+(10)parking_space:	22
+
+	Total:	840
 </pre>
 </div>
 </div>
@@ -12573,7 +12595,7 @@ Top 10 source:
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><p><span style="text-decoration: underline;"><strong>Analysis:</strong></span></p></p>
 <ul>
-<li style="padding-left: 30px;">On top users, except 'Chouloute' extra number of inputs, nothing to report</li>
+<li style="padding-left: 30px;">On top users, except 'Chouloute' extra number of inputs (45% of total), nothing to report</li>
 <li style="padding-left: 30px;">On top postcodes, it is interesting to observe that not only Colomiers postal code is represented (31770), Tournefeuille (31170) and Toulouse (31300&amp;31000) are numberous as well. That could be explained by the fact Tournefeuille and Colomiers are neighbours of Colomiers. Same for Pibrac (31820) but with less quantity. 31776 corresponds to Colomiers with a different format. I will analyse afterwards.</li>
 <li style="padding-left: 30px;">On top city, same observation as for postal code, Colomiers represents half of references. As I noticed in the first analysis from the sample, Colomiers with Upper and Lower cases that make two entries into Data Base. I propose to clean it afterwards.</li>
 <li style="padding-left: 30px;">On top street types, we can see there are only 6 entries. There is one issue related to sensitive case (Place and place). I will fix it in next section</li>
@@ -12759,6 +12781,20 @@ Top 10 source:
 (10)cadastre-dgi-fr source : Direction Générale des Impôts - Cadastre. Mise à jour : 2012:	212
 
 	Total:	40409
+
+Top 10 amenity:
+(1)parking:	305
+(2)bench:	58
+(3)bicycle_parking:	55
+(4)recycling:	48
+(5)restaurant:	43
+(6)post_box:	29
+(7)school:	27
+(8)bank:	24
+(9)fast_food:	22
+(10)parking_space:	22
+
+	Total:	840
 </pre>
 </div>
 </div>
@@ -12919,7 +12955,7 @@ Total source tag with year:39074
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="6)--Conclusions">6)  Conclusions<a class="anchor-link" href="#6)--Conclusions">&#182;</a></h2>
+<h2 id="6)--Conclusion-about-OSM-analysis-focused-on-Colomiers,-France">6)  Conclusion about OSM analysis focused on Colomiers, France<a class="anchor-link" href="#6)--Conclusion-about-OSM-analysis-focused-on-Colomiers,-France">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -12936,6 +12972,79 @@ Total source tag with year:39074
 <li>The data is quite old since most of information are 7 years old</li>
 </ul>
 
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="7)-Ways-to-improve-Open-Street-Map-data-quality">7) Ways to improve Open Street Map data quality<a class="anchor-link" href="#7)-Ways-to-improve-Open-Street-Map-data-quality">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><strong><u>Data format checker</u></strong></li>
+<ul>
+<li>I already highlight in my analyse it will be interesting to fix the format of well know data types.</li>
+<ul>
+<li>For example: <strong>Date</strong> (European format or us), <strong>Price</strong> (with comma or a point), <strong>City</strong> name (lower or higher cases) or <strong>Street</strong> (with abrevation of full name), &hellip;</li>
+<li>To enforce those format rules, a checker could be addred in the import function in OSM that could refuse to apply change with Format errors</li>
+</ul>
+<li><u>Benefit:</u></li>
+<ul>
+<li>This improvement could help Data analyst to parse the data quicker and more efficiently</li>
+</ul>
+<li><u>Anticipated issues:</u></li>
+<ul>
+<li>To apply a restrictive checker could bother users and so decrease the number of update</li>
+<li>A workaround would be to develop IDE with such of format rules to help users</li><br>
+</ul>
+</ul>
+<li><strong><u>Merge Way and Node types</u></strong></li>
+<ul>
+<li>The difference between <strong>Way</strong> and <strong>Node</strong> in terms of information tags is not so important except regarding the <strong>Node</strong> that are attached in the <strong>Way</strong> object</li>
+<li>To demonstrate this, I code functions applicable for both types</li>
+<li>We can merge the types in a new <strong>Element</strong> tag</li>
+<li>The impact on XML is just a new sub-tag named <strong>Element_Type</strong> with: <strong>Way</strong> or <strong>Node</strong> OR we can just implicitly interpret an <strong>Element</strong> with no attached <strong>Node</strong> as a <strong>Node</strong> and an Element with at least 2 <strong>Node</strong> as a <strong>way</strong></li>
+<li><u>Benefit:</u></li>
+<ul>
+<li>The benefit is to simplify data analysis by reducing the number of code lines requested to parse all the code</li>
+</ul>
+<li><u>Anticipated issues:</u></li>
+<ul>
+<li>We would face issues with legacy data</li>
+<li>Confusion could be another a drawback of this solution</li><br>
+</ul>
+</ul>
+<li><strong><u>Improve update providers number</u></strong></li>
+<ul>
+<li>We have seen that one user (<strong>Chouloute</strong>) has recorded almost half of entries (<strong>45%</strong>) in the dataset. The first two recorder <strong>67%</strong> and the top ten <strong>86%</strong>.</li>
+<li>That shows that update rests on a few user and that could be an real issue regarding accuracy of data and long term OSM sustainability</li>
+<li>Moreover, we have seen that data source are quite old (<strong>2010)</strong></li>
+<li>Consequently, the goal is to widen the list of users updating data in OSM DB</li>
+<li>One way to achieve this goal would be to mimic what other Map Web site do.</li>
+<li>For example, Waze app has created a kind of ranking for user with different grades resulting of frequent update and live signalling.</li>
+<li>OSM could enable top user to have special panel in the OSM DB for their home of their Point Of Interest (ex.: their favourite soccer club or favourite pub)</li>
+</ul>
+<ul>
+<li><u>Benefit:</u></li>
+<ul>
+<li>The benefit will be encourage OSM user to enrich the DB</li>
+</ul>
+<li><u>Anticipated issues:</u></li>
+</ul>
+<ul>
+<ul>
+<li>None</li>
+</ul>
+</ul>
 </div>
 </div>
 </div>

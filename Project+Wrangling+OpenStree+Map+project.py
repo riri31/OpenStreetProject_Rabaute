@@ -1,7 +1,26 @@
 
 # coding: utf-8
 
-# # Project Wrangling:  Open Stree Map project
+# # Project Wrangling:  Open Street Map project
+
+# In[1]:
+
+from IPython.display import HTML
+
+HTML('''<script>
+code_show=true; 
+function code_toggle() {
+ if (code_show){
+ $('div.input').hide();
+ } else {
+ $('div.input').show();
+ }
+ code_show = !code_show
+} 
+$( document ).ready(code_toggle);
+</script>
+<form action="javascript:code_toggle()"><input type="submit" value="Click here to toggle on/off the raw code."></form>''')
+
 
 # <p><span style="text-decoration: underline;"><strong>Objectives:</strong></span></p>
 # <ul>
@@ -12,14 +31,19 @@
 # </ul>
 
 # <p><span style="text-decoration: underline;"><strong>Material</strong></span>:</p>
-# <p><span style="color: #0000ff;">&nbsp;&nbsp;&nbsp; Map Area: <em>Colomiers, Occitanie, France. This the place where I live.</em><br /><em>&nbsp;&nbsp;&nbsp; (This map has been extracted from Metro extracts.The file size is around 58 MB.)</em></span></p>
-# <p>The tools used for the analysis are:</p>
+# <p>&nbsp;<span style="color: #0000ff;">&nbsp;&nbsp;&nbsp; Map Area: <em>Colomiers, Occitanie, France. This the place where I live.</em><br /><em>&nbsp;&nbsp;&nbsp; (This map has been extracted from Metro extracts.The file size is around 58 MB.)</em></span></p>
+# <p>&nbsp;The tools used for the analysis are:</p>
 # <ul>
-# <li>&nbsp;Python as coding language</li>
+# <li>Python as coding language</li>
 # <li>Jupyter for code editing + analysis report</li>
 # <li>SQLite for Data Base</li>
 # </ul>
-# 
+# <p><span style="text-decoration: underline;"><strong>Method:</strong></span></p>
+# <p>Ths document mixes comments and code in order to demonstrate step by step&nbsp;the methode used for data analysis.</p>
+# <p>But if you prefer to have document and code split, you can toggle on/off the raw code by clicking on the button&nbsp;on top this notebook.</p>
+# <p>You will find the code alone&nbsp;with following name: <em>Project+Wrangling+OpenStree+Map+project.py</em></p>
+# <p>&nbsp;</p>
+# </div>
 
 # ## 1) First observations on data set
 
@@ -27,7 +51,7 @@
 # 
 # The output is an XML file that I'm checking with a simple tool like Notepad++.
 
-# In[1]:
+# In[2]:
 
 #!/usr/bin/env python
 
@@ -76,7 +100,7 @@ with open(SAMPLE_FILE, 'wb') as output:
 # 
 # I tested all my code against this sample data each time I could to minimize computing time.
 
-# # 2 ) Problems observed in the sample
+# ## 2 ) Problems observed in the sample
 
 # <p>Thanks to the sample, the following issues could be quickly raised:</p>
 # <ul>
@@ -111,7 +135,7 @@ with open(SAMPLE_FILE, 'wb') as output:
 # <li>tag properties <strong><span style="color: #0000ff;">k</span></strong> and <strong><span style="color: #0000ff;">v</span></strong> will be mapped with <strong><span style="color: #0000ff;">key</span> </strong>and <strong><span style="color: #0000ff;">value</span> </strong>as requested in SQL schema</li>
 # </ul> 
 
-# In[2]:
+# In[3]:
 
 import csv
 
@@ -258,7 +282,7 @@ tables_creation()
 # <li>Import of csv files into DB thanks to pandas dataframe</li>
 # </ol>
 
-# In[3]:
+# In[4]:
 
 import sqlite3
 
@@ -342,7 +366,7 @@ sql_creation()
 # 
 # Indeed, precise position parameters are already in nodes table (lat, long) and nodes are already referenced into ways nodes table. It is in opposition of normalization rules that are to not have redondant information.
 
-# In[4]:
+# In[5]:
 
 import pandas as pd
 import numpy as np
@@ -392,13 +416,13 @@ def import_sql(csv_file_nodes='nodes.csv',csv_file_nodes_tags='nodes_tags.csv',c
 import_sql()
 
 
-# # 5)  First analysis from Database
+# ## 5)  First analysis from Database
 
 # Once data imported into SQL database, we can analyse the data.
 # 
 # For that, I develop a Python function that will display Top 10 for users, city, postcode and street types. That will enable me to see if there is some obvious issues with data.
 
-# In[5]:
+# In[6]:
 
 def display(result):
     j=1
@@ -467,7 +491,15 @@ def top_sql():
     ;''')
     display_total(result)
 
+    ### Show top 10 source ###
+    result=c.execute('''SELECT value,count(value) from (select * from nodes_tags UNION ALL select * from ways_tags) where key='amenity' group by value order by count(value) desc limit 10
+    ;''')
+    print "\nTop 10 amenity:"
+    display(result)
 
+    result=c.execute('''SELECT count(value) from (select * from nodes_tags UNION ALL select * from ways_tags) where key='amenity'
+    ;''')
+    display_total(result)
 
     conn.close()
 
@@ -478,7 +510,7 @@ top_sql()
 
 # <p><span style="text-decoration: underline;"><strong>Analysis:</strong></span></p>
 # <ul>
-# <li style="padding-left: 30px;">On top users, except 'Chouloute' extra number of inputs, nothing to report</li>
+# <li style="padding-left: 30px;">On top users, except 'Chouloute' extra number of inputs (45% of total), nothing to report</li>
 # <li style="padding-left: 30px;">On top postcodes, it is interesting to observe that not only Colomiers postal code is represented (31770), Tournefeuille (31170) and Toulouse (31300&amp;31000) are numberous as well. That could be explained by the fact Tournefeuille and Colomiers are neighbours of Colomiers. Same for Pibrac (31820) but with less quantity. 31776 corresponds to Colomiers with a different format. I will analyse afterwards.</li>
 # <li style="padding-left: 30px;">On top city, same observation as for postal code, Colomiers represents half of references. As I noticed in the first analysis from the sample, Colomiers with Upper and Lower cases that make two entries into Data Base. I propose to clean it afterwards.</li>
 # <li style="padding-left: 30px;">On top street types, we can see there are only 6 entries. There is one issue related to sensitive case (Place and place). I will fix it in next section</li>
@@ -491,17 +523,15 @@ top_sql()
 
 # ## 4)  Cleaning of Dataset
 
-# In this chapter, I propose to clean the data in the csv creation step. The advantage is I have just to adapt my code. Moreover, as the OSM dataset is pretty clean I will have only a few correction to do.
-# 
-# I create a new function named 'csv_data_cleaning' that will get a csv file produced by python code, apply some modifications and output a new csv file I will import into a new SQLite DataBase (in fact, I drop all the existing tables in the existing DB and I import again with modified csv files).
-# 
-# a) City and street type modification
-# 
-# On first analysis, we noticed that both city entries were different because our code was sensitive to upper/lower cases. Same for street types.
-# 
-# I propose to use string.capitalize() function to have the first letter of city in capitize letter and the rest lowercased.
+# <p>In this chapter, I propose to clean the data in the csv creation step. The advantage is I have just to adapt my code. Moreover, as the OSM dataset is pretty clean I will have only a few correction to do.</p>
+# <p>I create a new function named 'csv_data_cleaning' that will get a csv file produced by python code, apply some modifications and output a new csv file I will import into a new SQLite DataBase (in fact, I drop all the existing tables in the existing DB and I import again with modified csv files).</p>
+# <ol style="list-style-type: lower-alpha;">
+# <li><span style="text-decoration: underline;">City and street type modification</span></li>
+# </ol>
+# <p>On first analysis, we noticed that both city entries were different because our code was sensitive to upper/lower cases. Same for street types.</p>
+# <p>I propose to use string.capitalize() function to have the first letter of city in capitize letter and the rest lowercased.</p>
 
-# In[6]:
+# In[7]:
 
 def name_cleaning(city_name):
     return city_name.capitalize() 
@@ -535,7 +565,7 @@ csv_data_cleaning('nodes_tags.csv','nodes_tags_cleaned.csv')
 csv_data_cleaning('ways_tags.csv','ways_tags_cleaned.csv')
 
 
-# In[7]:
+# In[8]:
 
 sql_creation()
 import_sql(csv_file_nodes='nodes.csv',csv_file_nodes_tags='nodes_tags_cleaned.csv',csv_file_ways='ways.csv',csv_file_ways_tags='ways_tags_cleaned.csv',csv_file_ways_nodes='ways_nodes.csv')
@@ -584,7 +614,7 @@ top_sql()
 # <ul>
 # </ul>
 
-# In[8]:
+# In[9]:
 
 import re
 from collections import Counter
@@ -629,7 +659,7 @@ conn.close()
 # <li>It appears that data are quite old since the main part of data are from 2010 (ie. 7 years old)</li>
 # </ul>
 
-# ## 6)  Conclusions
+# ## 6)  Conclusion about OSM analysis focused on Colomiers, France
 
 # Thanks to analysis, we have checked quality from an extract of Open Street dataset and analyse some items.
 # 
@@ -638,3 +668,62 @@ conn.close()
 # - The common mistake of case sencitiveness could be preventer by a systematic cleaning routine that could enforce rules for every entries
 # - The data is quite old since most of information are 7 years old
 # 
+
+# ## 7) Ways to improve Open Street Map data quality
+
+# <ul>
+# <li><strong><u>Data format checker</u></strong></li>
+# <ul>
+# <li>I already highlight in my analyse it will be interesting to fix the format of well know data types.</li>
+# <ul>
+# <li>For example: <strong>Date</strong> (European format or us), <strong>Price</strong> (with comma or a point), <strong>City</strong> name (lower or higher cases) or <strong>Street</strong> (with abrevation of full name), &hellip;</li>
+# <li>To enforce those format rules, a checker could be addred in the import function in OSM that could refuse to apply change with Format errors</li>
+# </ul>
+# <li><u>Benefit:</u></li>
+# <ul>
+# <li>This improvement could help Data analyst to parse the data quicker and more efficiently</li>
+# </ul>
+# <li><u>Anticipated issues:</u></li>
+# <ul>
+# <li>To apply a restrictive checker could bother users and so decrease the number of update</li>
+# <li>A workaround would be to develop IDE with such of format rules to help users</li><br>
+# </ul>
+# </ul>
+# <li><strong><u>Merge Way and Node types</u></strong></li>
+# <ul>
+# <li>The difference between <strong>Way</strong> and <strong>Node</strong> in terms of information tags is not so important except regarding the <strong>Node</strong> that are attached in the <strong>Way</strong> object</li>
+# <li>To demonstrate this, I code functions applicable for both types</li>
+# <li>We can merge the types in a new <strong>Element</strong> tag</li>
+# <li>The impact on XML is just a new sub-tag named <strong>Element_Type</strong> with: <strong>Way</strong> or <strong>Node</strong> OR we can just implicitly interpret an <strong>Element</strong> with no attached <strong>Node</strong> as a <strong>Node</strong> and an Element with at least 2 <strong>Node</strong> as a <strong>way</strong></li>
+# <li><u>Benefit:</u></li>
+# <ul>
+# <li>The benefit is to simplify data analysis by reducing the number of code lines requested to parse all the code</li>
+# </ul>
+# <li><u>Anticipated issues:</u></li>
+# <ul>
+# <li>We would face issues with legacy data</li>
+# <li>Confusion could be another a drawback of this solution</li><br>
+# </ul>
+# </ul>
+# <li><strong><u>Improve update providers number</u></strong></li>
+# <ul>
+# <li>We have seen that one user (<strong>Chouloute</strong>) has recorded almost half of entries (<strong>45%</strong>) in the dataset. The first two recorder <strong>67%</strong> and the top ten <strong>86%</strong>.</li>
+# <li>That shows that update rests on a few user and that could be an real issue regarding accuracy of data and long term OSM sustainability</li>
+# <li>Moreover, we have seen that data source are quite old (<strong>2010)</strong></li>
+# <li>Consequently, the goal is to widen the list of users updating data in OSM DB</li>
+# <li>One way to achieve this goal would be to mimic what other Map Web site do.</li>
+# <li>For example, Waze app has created a kind of ranking for user with different grades resulting of frequent update and live signalling.</li>
+# <li>OSM could enable top user to have special panel in the OSM DB for their home of their Point Of Interest (ex.: their favourite soccer club or favourite pub)</li>
+# </ul>
+# <ul>
+# <li><u>Benefit:</u></li>
+# <ul>
+# <li>The benefit will be encourage OSM user to enrich the DB</li>
+# </ul>
+# <li><u>Anticipated issues:</u></li>
+# </ul>
+# <ul>
+# <ul>
+# <li>None</li>
+# </ul>
+# </ul>
